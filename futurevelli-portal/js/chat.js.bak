@@ -1,0 +1,120 @@
+// Chat functionality module
+(function() {
+    const chatBtn = document.getElementById('chatButton');
+    const chatPopup = document.getElementById('chatPopup');
+    const chatInput = document.getElementById('chatInput');
+    const chatBody = document.getElementById('chatBody');
+    const sendBtn = document.getElementById('chatSendBtn');
+    const closeBtn = document.getElementById('closeChat');
+        const anonymousCheckbox = document.getElementById('anonymousComplaint');
+        
+        // Event listeners
+        chatBtn.addEventListener('click', () => {
+            chatPopup.style.display = 'block';
+        });
+        
+        closeBtn.addEventListener('click', () => {
+            chatPopup.style.display = 'none';
+        });
+        
+        // Function to append message to chat
+        function appendMessage(type, content) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${type}-message`;
+            messageDiv.textContent = content;
+            chatBody.appendChild(messageDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+            return messageDiv;
+        }
+
+        // Function to append message to chat
+        function appendMessage(type, content) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${type}-message`;
+            messageDiv.textContent = content;
+            chatBody.appendChild(messageDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+            return messageDiv;
+        }
+
+        // Event listeners
+        chatBtn.addEventListener('click', () => {
+            chatPopup.style.display = 'block';
+        });
+        
+        closeBtn.addEventListener('click', () => {
+            chatPopup.style.display = 'none';
+        });
+
+        // Handle chat input submission
+        async function handleChatSubmit() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+            
+            // Add user message to chat
+            appendMessage('user', message);
+            chatInput.value = '';
+            
+            // Get userId from localStorage or generate a temporary one
+            const userId = localStorage.getItem('userId') || 'temp-' + Date.now();
+            
+            // Show loading indicator
+            const loadingMessage = appendMessage('ai', 'Thinking...');
+            
+            try {
+                // Make API call
+                const response = await fetch('http://localhost:3000/api/chat', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        query: message,
+                        userId: userId,
+                        isAnonymous: anonymousCheckbox.checked
+                    })
+                });
+                
+                // Remove loading message
+                loadingMessage.remove();
+                
+                if (response.error) {
+                    throw new Error(response.error);
+                }
+                
+                // Add AI response to chat
+                appendMessage('ai', response.message || response.response);
+            } catch (error) {
+                // Remove loading message if it exists
+                loadingMessage?.remove();
+                
+                // Show error message
+                appendMessage('error', 'Sorry, I am currently unable to connect to the AI. Please try again later.');
+                console.error('Chat error:', error);
+            }
+        });
+        
+        // Handle enter key
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendBtn.click();
+            }
+        });
+        
+    } catch (error) {
+        console.error('Error initializing chat:', error);
+    }
+};
+
+// Initialize page functionality
+document.addEventListener('DOMContentLoaded', initChat);
+document.addEventListener('DOMContentLoaded', () => {
+    initChat();
+});
+
+// Utility functions
+function appendMessage(type, content) {
+    const chatBody = document.getElementById('chatBody');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chat-message ${type}-message`;
+    messageDiv.textContent = content;
+    chatBody.appendChild(messageDiv);
+    chatBody.scrollTop = chatBody.scrollHeight;
+}

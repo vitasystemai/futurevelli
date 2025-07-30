@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>City of Futurevelli</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/chat.css">
+    <link rel="stylesheet" href="css/complaints.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="navbar-left">
+            <h1 class="navbar-title">City of Futurevelli</h1>
+        </div>
+        <div class="navbar-right">
+            <button class="nav-button" id="chatButton">
+                <i class="fas fa-comment-dots"></i> Chat
+            </button>
+            <button class="nav-button" id="myComplaintsButton">
+                <i class="fas fa-clipboard-list"></i> My Complaints
+            </button>
+            <button class="nav-button" id="helpDeskButton">
+                <i class="fas fa-question-circle"></i> Help Desk
+            </button>
+            <span class="location-display">
+                <i class="fas fa-map-marker-alt"></i> <span id="currentLocation">Fetching Location...</span>
+            </span>
+            <div class="profile-section">
+                <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div id="authOptions">
+                        <button class="dropdown-btn" id="loginBtn">Login</button>
+                        <button class="dropdown-btn" id="signupBtn">Signup</button>
+                    </div>
+                    <div id="loggedInUser" style="display: none;">
+                        <span id="userNameDisplay"></span>
+                        <button class="dropdown-btn" id="viewProfileBtn">View Profile</button>
+                        <button class="dropdown-btn" id="signOutBtn">Sign Out</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section id="homeSection" class="hero-section active-section">
+            <div class="hero-slideshow" id="heroSlideshow">
+                <div class="slide">
+                    <img src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000" alt="Smart City Skyline">
+                </div>
+                <div class="slide">
+                    <img src="https://images.unsplash.com/photo-1444723121867-7a241cacace9" alt="City Park">
+                </div>
+                <div class="slide">
+                    <img src="https://images.unsplash.com/photo-1514924013411-cbf25faa35bb" alt="Modern Infrastructure">
+                </div>
+                <div class="slide">
+                    <img src="https://images.unsplash.com/photo-1498036882173-b41c28a8ba34" alt="Digital Services">
+                </div>
+            </div>
+            <div class="hero-content">
+                <h2 class="hero-title">Welcome, how can we serve you today?</h2>
+                <div class="service-tags">
+                    <button class="tag-button">Licence</button>
+                    <button class="tag-button">Passport</button>
+                    <button class="tag-button">Complaints</button>
+                    <button class="tag-button">Permits</button>
+                    <button class="tag-button">More</button>
+                </div>
+                <div class="search-bar-container">
+                    <input type="text" class="search-bar" placeholder="Search for a service...">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+            </div>
+        </section>
+
+        <section id="myComplaintsSection" class="content-section">
+            <h2>My Complaints</h2>
+            <div class="complaints-controls">
+                <div class="complaints-filters">
+                    <select id="complaintTypeFilter">
+                        <option value="all">All Types</option>
+                        <option value="complaints">Complaints Only</option>
+                        <option value="permits">Permits Only</option>
+                    </select>
+                    <select id="statusFilter">
+                        <option value="all">All Status</option>
+                        <option value="submitted">Submitted</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="resolved">Resolved</option>
+                    </select>
+                </div>
+                <button id="refreshComplaints" class="refresh-btn">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+            <div id="complaintsList" class="complaints-list">
+                <p class="placeholder-text">No complaints found. Start by chatting with our AI assistant!</p>
+            </div>
+            <div id="complaintsError" class="complaints-error" style="display: none;">
+                <i class="fas fa-exclamation-circle"></i>
+                <p>Failed to load complaints. Please try again.</p>
+                <button onclick="complaintStore.loadComplaints()">Retry</button>
+            </div>
+        </section>
+
+        <section id="helpDeskSection" class="content-section">
+            <h2>Help Desk</h2>
+            <div class="faq-section">
+                <h3>Frequently Asked Questions</h3>
+                <div class="faq-item">
+                    <button class="faq-question">How do I report a new complaint?</button>
+                    <div class="faq-answer">You can report a new complaint by clicking the 'Chat' button in the navbar and speaking to our AI assistant.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">How can I check the status of my complaint?</button>
+                    <div class="faq-answer">Navigate to 'My Complaints' in the navbar, or ask the AI assistant for a specific complaint ID.</div>
+                </div>
+                </div>
+            <div class="helpline-info">
+                <h3>Helpline Contact Information</h3>
+                <p><i class="fas fa-phone-alt"></i> Emergency Services: 100</p>
+                <p><i class="fas fa-phone-alt"></i> City Services: +91 87654 32109</p>
+                <p><i class="fas fa-envelope"></i> General Inquiry: info@futurevelli.gov</p>
+            </div>
+        </section>
+
+        <div id="authModal" class="modal">
+            <div class="modal-content">
+                <span class="close-button" id="closeAuthModal">&times;</span>
+                <div id="loginForm" class="auth-form active-form">
+                    <h3>Login</h3>
+                    <form>
+                        <label for="loginEmail">Email:</label>
+                        <input type="email" id="loginEmail" placeholder="your@example.com" required>
+                        <label for="loginPassword">Password:</label>
+                        <input type="password" id="loginPassword" placeholder="********" required>
+                        <button type="submit" class="auth-submit-btn">Login</button>
+                        <p class="switch-auth">Don't have an account? <span id="switchToSignup">Sign Up</span></p>
+                    </form>
+                </div>
+                <div id="signupForm" class="auth-form">
+                    <h3>Signup</h3>
+                    <form>
+                        <label for="signupName">Name:</label>
+                        <input type="text" id="signupName" required>
+                        <label for="signupMobile">Mobile Number:</label>
+                        <input type="tel" id="signupMobile" required>
+                        <label for="signupEmail">Email:</label>
+                        <input type="email" id="signupEmail" required>
+                        <label for="signupAddress">Address:</label>
+                        <textarea id="signupAddress" rows="3" required></textarea>
+                        <label for="signupPassword">Password:</label>
+                        <input type="password" id="signupPassword" required>
+                        <button type="submit" class="auth-submit-btn">Signup</button>
+                        <p class="switch-auth">Already have an account? <span id="switchToLogin">Login</span></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="contact-info">
+                <p><i class="fas fa-map-marker-alt"></i> 123 Smart City Blvd, Futurevelli, FV 12345</p>
+                <p><i class="fas fa-envelope"></i> contact@futurevelli.gov</p>
+                <p><i class="fas fa-phone"></i> +91 0870 1234567</p>
+            </div>
+            <div class="social-icons">
+                <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+        <p class="copyright">&copy; 2025 City of Futurevelli. All rights reserved.</p>
+    </footer>
+
+    <div class="chat-popup" id="chatPopup">
+        <div class="chat-header">
+            <h3>Futurevelli</h3>
+            <button class="close-chat" id="closeChat">&times;</button>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <!-- Welcome messages will be added by JavaScript -->
+        </div>
+        <div class="chat-input-area">
+            <div class="anonymous-option">
+                <input type="checkbox" id="anonymousComplaint" checked>
+                <label for="anonymousComplaint">Submit report anonymously</label>
+            </div>
+            <div class="chat-input-wrapper">
+                <input type="text" class="chat-input"
+                       placeholder="Type your message here... (e.g., report high grass, request permit)" 
+                       class="chat-input" 
+                       id="chatInput">
+                <button class="chat-send-btn" id="chatSendBtn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="chat-footer">
+                Powered by City of Futurevelli AI | Available 24/7
+            </div>
+        </div>
+    </div>
+
+    <script src="js/chat.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
